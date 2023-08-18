@@ -210,7 +210,7 @@ export default async function pageTemplate() {
                 const ttl = form.ttl.value;
                 const result = document.getElementById('result');
                 result.innerHTML = '';
-                fetch('/api/links', {
+                fetch('./api/links', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -241,7 +241,7 @@ export default async function pageTemplate() {
             async function getLinks() {
                 const list = document.getElementById('list');
                 list.innerHTML = '<h2>Active Links:</h2><ul>';
-                fetch('/api/links')
+                fetch('./api/links')
                 .then(res => res.json())
                 .then(res => {
                     if (res.error !== undefined && res.error !== null) {
@@ -321,7 +321,7 @@ export default async function pageTemplate() {
             }
 
             async function deleteLink(slug) {
-                fetch('/api/links/' + slug, {
+                fetch('./api/links/' + slug, {
                     method: 'DELETE'
                 })
                 .then(res => res.json())

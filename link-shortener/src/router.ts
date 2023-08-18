@@ -21,6 +21,16 @@ interface IStatResponse {
 // now let's create a router (note the lack of "new")
 const router = Router();
 
+// Dashboard page
+router.get('/dashboard', async (request) => {
+	const page = pageTemplate();
+	return new Response(await page, {
+		headers: {
+			'content-type': 'text/html;charset=UTF-8',
+		},
+	});
+});
+
 // GET a slug to redirect
 router.get('/:id', async (params, env) => {
 	// get link
@@ -252,19 +262,9 @@ router.post('/api/links', async (request, env) => {
 	}), { status: 201 });
 });
 
-// Home page
-router.get('/dashboard', async (request) => {
-	const page = pageTemplate();
-	return new Response(await page, {
-		headers: {
-			'content-type': 'text/html;charset=UTF-8',
-		},
-	});
-});
-
 router.get('/', async (request) => {
 	// redirect to the dashboard page
-	return Response.redirect('/dashboard', 307);
+	return Response.redirect(new URL(request.url).origin + '/dashboard', 307);
 });
 
 // 404 for everything else
