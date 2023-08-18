@@ -253,13 +253,18 @@ router.post('/api/links', async (request, env) => {
 });
 
 // Home page
-router.get('/', async (request) => {
+router.get('/dashboard', async (request) => {
 	const page = pageTemplate();
 	return new Response(await page, {
 		headers: {
 			'content-type': 'text/html;charset=UTF-8',
 		},
 	});
+});
+
+router.get('/', async (request) => {
+	// redirect to the dashboard page
+	return Response.redirect('/dashboard', 307);
 });
 
 // 404 for everything else

@@ -229,7 +229,7 @@ export default async function pageTemplate() {
                         // page hostname
                         const pageHostname = window.location.hostname;
 
-                        result.innerHTML = '<p>Your new link is <a href="' + res.short_url + '" target="_blank">' + res.short_url + '</a> and will expire on ' + new Date(Date.now() + (Number(res.ttl) * 1000)).toLocaleString() + '</p>';
+                        result.innerHTML = '<p>Your new link is <a href="' + res.short_url + '" target="_blank">' + res.short_url + '</a> and will expire on ' + new Date(Date.now() + (Number(res.ttl) * 1000)).toLocaleString() + '<br>Allow ~15 seconds to fully propagate across network.</p>';
                     }
                 })
                 .catch(err => {
