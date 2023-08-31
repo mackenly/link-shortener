@@ -13,6 +13,7 @@ export default async function pageTemplate() {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+        <link rel="icon" href="https://fav.farm/🔗" />
         <style>
             ` + style + `
         </style>

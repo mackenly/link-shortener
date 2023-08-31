@@ -248,14 +248,12 @@ function scripts() {
 
 
             // add data
-            const title = shadowRoot.querySelector('.link-title h3');
-            title.textContent = this.data.title;
-
+            const clampedTitle = this.data.title.length > 30 ? this.data.title.substring(0, 30) + '...' : this.data.title;
             const linkHeader = shadowRoot.querySelector('.link-header');
             linkHeader.innerHTML = \`
                 <h3>
                     <a target="_blank" href="\` + this.data.true_url + \`">
-                        \` + this.data.title + \`
+                        \` + clampedTitle + \`
                     </a>
                 </h3>
                 <span class="material-symbols-outlined">
