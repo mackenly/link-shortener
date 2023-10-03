@@ -179,65 +179,64 @@ function scripts() {
 
             // add template
             const linkItem = document.createElement('div');
+            linkItem.setAttribute('class', 'link-card');
             linkItem.innerHTML = \`
-            <li class="link-card">
-                <div class="link-title link-section">
-                    <div class="link-header">
-                        <h3>
-                            <a target="_blank"></a>
-                        </h3>
-                        <span class="material-symbols-outlined">
-                            open_in_new
-                        </span>
-                    </div>
-                    <div class="link-copy">
-                        <input type="text">
-                        <span class="material-symbols-outlined">
-                            content_copy
-                        </span>
-                    </div>
+            <div class="link-title link-section">
+                <div class="link-header">
+                    <h3>
+                        <a target="_blank"></a>
+                    </h3>
+                    <span class="material-symbols-outlined">
+                        open_in_new
+                    </span>
                 </div>
-                <div class="link-section">
-                    <button class="link-stat">
-                        <span class="material-symbols-outlined">
-                            share
-                        </span>
-                        Share Link
-                    </button>
-                    <button class="link-stat">
-                        <span class="material-symbols-outlined">
-                            link
-                        </span>
-                        Copy Link
-                    </button>
-                    <button class="link-stat">
-                        <span class="material-symbols-outlined">
-                            qr_code_scanner
-                        </span>
-                        QR Code
-                    </button>
+                <div class="link-copy">
+                    <input type="text">
+                    <span class="material-symbols-outlined">
+                        content_copy
+                    </span>
                 </div>
-                <div class="link-section">
-                    <div class="link-stat">
-                        <span class="material-symbols-outlined">
-                            trending_up
-                        </span>
-                        0 views
-                    </div>
-                    <div class="link-stat">
-                        <span class="material-symbols-outlined">
-                            hourglass_empty
-                        </span>
-                        Expires
-                    </div>
-                    <button class="link-stat">
-                        <span class="material-symbols-outlined">
-                            delete_forever
-                        </span>
-                        Delete
-                    </button>
+            </div>
+            <div class="link-section">
+                <button class="link-stat">
+                    <span class="material-symbols-outlined">
+                        share
+                    </span>
+                    Share Link
+                </button>
+                <button class="link-stat">
+                    <span class="material-symbols-outlined">
+                        link
+                    </span>
+                    Copy Link
+                </button>
+                <button class="link-stat">
+                    <span class="material-symbols-outlined">
+                        qr_code_scanner
+                    </span>
+                    QR Code
+                </button>
+            </div>
+            <div class="link-section">
+                <div class="link-stat">
+                    <span class="material-symbols-outlined">
+                        trending_up
+                    </span>
+                    0 views
                 </div>
-            </li>
+                <div class="link-stat">
+                    <span class="material-symbols-outlined">
+                        hourglass_empty
+                    </span>
+                    Expires
+                </div>
+                <button class="link-stat">
+                    <span class="material-symbols-outlined">
+                        delete_forever
+                    </span>
+                    Delete
+                </button>
+            </div>
             \`;
 
             shadowRoot.appendChild(linkItem);
@@ -321,7 +320,7 @@ function scripts() {
 
 async function getLinks() {
 	const list = document.getElementById('list');
-	list.innerHTML = '<h2>Active Links:</h2><ul>';
+	list.innerHTML = '<h2>Active Links:</h2>';
 	fetch('./api/links')
 		.then((res) => res.json())
 		.then((res) => {
@@ -342,7 +341,6 @@ async function getLinks() {
                     }
 					list.innerHTML += \`<link-item link-title="\` + data.title + \`" short-url="\` + data.short_url + \`" true-url="\` + data.true_url + \`" slug="\` + data.slug + \`" hits="\` + data.hits + \`" expiration="\` + data.expiration + \`"></link-item>\`;
 				});
-				list.innerHTML += '</ul>';
 			}
 		})
 		.catch((err) => {
