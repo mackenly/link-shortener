@@ -1,0 +1,18 @@
+{
+    "index": "Home",
+    "getting-started": "Getting Started",
+    "zero-trust-setup": "Zero Trust Setup",
+    "api-routes": "API Docs",
+    "Sponsor": {
+        "title": "Sponsor Project",
+        "href": "https://github.com/sponsors/mackenly",
+        "newWindow": true,
+        "type": "page"
+    },
+    "License": {
+        "title": "License",
+        "href": "https://github.com/mackenly/link-shortener/blob/main/LICENSE",
+        "newWindow": true,
+        "type": "page"
+    }
+}
