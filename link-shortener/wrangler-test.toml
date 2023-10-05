@@ -1,0 +1,16 @@
+name = "link-shortener"
+main = "src/index.ts"
+compatibility_date = "2023-08-14"
+node_compat = true
+
+# Variable bindings. These are arbitrary, plaintext strings (similar to environment variables)
+# Note: Use secrets to store sensitive data.
+# Docs: https://developers.cloudflare.com/workers/platform/environment-variables
+# [vars]
+# MY_VARIABLE = "production_value"
+
+# Bind a KV Namespace. Use KV as persistent storage for small key-value pairs.
+# Docs: https://developers.cloudflare.com/workers/runtime-apis/kv
+kv_namespaces = [
+    { binding = "LINK_SHORTENER", id = "yourkey", preview_id = "yourkey" }
+]
