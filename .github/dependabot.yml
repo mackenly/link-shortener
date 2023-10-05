@@ -12,7 +12,7 @@ updates:
     assignees:
       - "mackenly"
 
-  - package-ecosystem: "pnpm"
+  - package-ecosystem: "npm"
     directory: "/docs"
     schedule:
       interval: "weekly"
