@@ -1,2 +1,2 @@
 # link-shortener
- Cloudflare Worker Backed Link Shortner
+ Cloudflare Worker Based Link Shortner

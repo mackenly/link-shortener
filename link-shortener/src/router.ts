@@ -18,6 +18,13 @@ interface IStatResponse {
 	hits: number;
 }
 
+interface ICreateLinkObject {
+	url: string;
+	ttl?: number;
+	meta?: object;
+	owner?: string;
+}
+
 // now let's create a router (note the lack of "new")
 const router = Router();
 
@@ -36,8 +43,8 @@ router.get('/:id', async (params, env) => {
 	// get link
 	const response = await env.LINK_SHORTENER.getWithMetadata(params.params.id);
 
-	// check if slug exists
-	if (!response) {
+	// check if exists
+	if (response.value === null || response.metadata === null) {
 		return new Response(JSON.stringify({
 			"error": "Not found.",
 		}), {
@@ -92,8 +99,8 @@ router.get('/api/links/:id/stats', async (params, env) => {
 	// get link
 	const response = await env.LINK_SHORTENER.getWithMetadata(params.params.id);
 
-	// check if slug exists
-	if (!response) {
+	// check if exists
+	if (response.value === null || response.metadata === null) {
 		return new Response(JSON.stringify({
 			"error": "Not found.",
 		}), {
@@ -142,7 +149,7 @@ router.get('/api/links/:id', async (params, env) => {
 	const response = await env.LINK_SHORTENER.getWithMetadata(params.params.id);
 
 	// check if slug exists
-	if (!response) {
+	if (response.value === null || response.metadata === null) {
 		return new Response(JSON.stringify({
 			"error": "Not found.",
 		}), {
@@ -169,7 +176,7 @@ router.get('/api/links/:id', async (params, env) => {
 
 // POST to the collection
 router.post('/api/links', async (request, env) => {
-	const content = await request.json();
+	const content: ICreateLinkObject = await request.json();
 
 	// validate the content
 	if (!content.url) {
