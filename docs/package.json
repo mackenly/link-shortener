@@ -1,15 +1,9 @@
 {
 	"dependencies": {
-		"next": "^13.5.3",
+		"next": "^13.4.7",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
-		"nextra": "^2.13.2",
-		"nextra-theme-docs": "^2.13.2"
-	},
-	"scripts": {
-		"dev": "next",
-		"build": "next build",
-		"start": "next start",
-		"install": "pnpm install"
+		"nextra": "^2.8.0",
+		"nextra-theme-docs": "^2.8.0"
 	}
 }
