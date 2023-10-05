@@ -9,3 +9,14 @@ updates:
     directory: "/link-shortener" # Location of package manifests
     schedule:
       interval: "weekly"
+    assignees:
+      - "mackenly"
+
+  - package-ecosystem: "npm"
+    directory: "/docs"
+    schedule:
+      interval: "weekly"
+    assignees:
+      - "mackenly"
+    labels:
+      - "docs"
