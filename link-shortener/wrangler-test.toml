@@ -9,6 +9,11 @@ node_compat = true
 # [vars]
 # MY_VARIABLE = "production_value"
 
+# Allow HTML and CSS files to be imported from within TypeScript files.
+rules = [
+    { type = "Data", globs = ["**/*.html", "**/*.css"], fallthrough = false }
+]
+
 # Bind a KV Namespace. Use KV as persistent storage for small key-value pairs.
 # Docs: https://developers.cloudflare.com/workers/runtime-apis/kv
 kv_namespaces = [

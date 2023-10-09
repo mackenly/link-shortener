@@ -1,39 +1,29 @@
 import { Router } from 'itty-router';
 import { customAlphabet } from 'nanoid';
 import { imageSync } from 'qr-image';
-import pageTemplate from './pageTemplate';
+import { ICreateLinkObject, IlinkResponse, IStatResponse } from './types';
 
-interface IlinkResponse {
-	slug: string;
-	url: string;
-	expiration: number;
-	meta: object;
-	hits: number;
-	owner: string;
-}
-
-interface IStatResponse {
-	slug: string;
-	url: string;
-	hits: number;
-}
-
-interface ICreateLinkObject {
-	url: string;
-	ttl?: number;
-	meta?: object;
-	owner?: string;
-}
+// @ts-ignore
+import Dashboard_HTML from './dashboard.html';
+// @ts-ignore
+import Dashboard_CSS from './assets/styles.css';
 
 // now let's create a router (note the lack of "new")
 const router = Router();
 
 // Dashboard page
 router.get('/dashboard', async (request) => {
-	const page = pageTemplate();
-	return new Response(await page, {
+	return new Response(Dashboard_HTML, {
 		headers: {
 			'content-type': 'text/html;charset=UTF-8',
+		},
+	});
+});
+
+router.get('/dashboard/styles.css', async (request) => {
+	return new Response(Dashboard_CSS, {
+		headers: {
+			'content-type': 'text/css;charset=UTF-8',
 		},
 	});
 });
