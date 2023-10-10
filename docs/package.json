@@ -5,5 +5,8 @@
 		"react-dom": "^18.2.0",
 		"nextra": "^2.13.0",
 		"nextra-theme-docs": "^2.13.0"
+	},
+	"scripts": {
+		"dev": "pnpm next"
 	}
 }

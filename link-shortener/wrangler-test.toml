@@ -5,9 +5,13 @@ node_compat = true
 
 # Variable bindings. These are arbitrary, plaintext strings (similar to environment variables)
 # Note: Use secrets to store sensitive data.
-# Docs: https://developers.cloudflare.com/workers/platform/environment-variables
-# [vars]
-# MY_VARIABLE = "production_value"
+vars = { API_KEY = "testing-password" }
+
+# Allow HTML and CSS files to be imported from within TypeScript files.
+rules = [
+    { type = "Data", globs = ["**/*.html"], fallthrough = true },
+    { type = "Data", globs = ["**/*.css"], fallthrough = true }
+]
 
 # Bind a KV Namespace. Use KV as persistent storage for small key-value pairs.
 # Docs: https://developers.cloudflare.com/workers/runtime-apis/kv

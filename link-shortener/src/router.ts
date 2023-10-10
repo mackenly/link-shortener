@@ -1,47 +1,37 @@
 import { Router } from 'itty-router';
-import { customAlphabet } from 'nanoid';
 import { imageSync } from 'qr-image';
-import pageTemplate from './pageTemplate';
+import { IlinkResponse, IStatResponse, Metadata, Env, WorkerRequest } from './types';
+import { handleCreateLink } from './utils';
 
-interface IlinkResponse {
-	slug: string;
-	url: string;
-	expiration: number;
-	meta: object;
-	hits: number;
-	owner: string;
-}
+// @ts-ignore
+import Dashboard_HTML from './dashboard.html';
+// @ts-ignore
+import Dashboard_CSS from './assets/styles.css';
 
-interface IStatResponse {
-	slug: string;
-	url: string;
-	hits: number;
-}
-
-interface ICreateLinkObject {
-	url: string;
-	ttl?: number;
-	meta?: object;
-	owner?: string;
-}
-
-// now let's create a router (note the lack of "new")
 const router = Router();
 
 // Dashboard page
-router.get('/dashboard', async (request) => {
-	const page = pageTemplate();
-	return new Response(await page, {
+router.get('/dashboard', async (request: WorkerRequest) => {
+	return new Response(Dashboard_HTML, {
 		headers: {
 			'content-type': 'text/html;charset=UTF-8',
 		},
 	});
 });
 
+// Dashboard styles
+router.get('/dashboard/styles.css', async (request: WorkerRequest) => {
+	return new Response(Dashboard_CSS, {
+		headers: {
+			'content-type': 'text/css;charset=UTF-8',
+		},
+	});
+});
+
 // GET a slug to redirect
-router.get('/:id', async (params, env) => {
+router.get('/:id', async (request: WorkerRequest, env: Env) => {
 	// get link
-	const response = await env.LINK_SHORTENER.getWithMetadata(params.params.id);
+	const response = await env.LINK_SHORTENER.getWithMetadata(request.params.id);
 
 	// check if exists
 	if (response.value === null || response.metadata === null) {
@@ -56,29 +46,30 @@ router.get('/:id', async (params, env) => {
 	}
 
 	const { value, metadata } = response;
+	console.log(metadata);
 
 	// increment hits
-	await env.LINK_SHORTENER.put(params.params.id, value, {
+	await env.LINK_SHORTENER.put(request.params.id, value, {
 		metadata: {
 			meta: metadata.meta,
 			hits: Number(metadata.hits) + 1,
 			owner: metadata.owner,
 			url: metadata.url,
 		},
-		expirationTtl: metadata.expiration,
+		expirationTtl: metadata.expiration || 0,
 	});
 
 	// return response
-	return Response.redirect(value, 301);
+	return Response.redirect(value, 307);
 });
 
 // GET all links
-router.get('/api/links', async (params, env) => {
+router.get('/api/links', async (request: WorkerRequest, env: Env) => {
 	// get all links
 	const links = await env.LINK_SHORTENER.list();
 
 	// return response
-	const linkResponse: any[] = [];
+	const linkResponse: Array<IlinkResponse> = [];
 
 	for (const link of links.keys) {
 		linkResponse.push({
@@ -91,13 +82,18 @@ router.get('/api/links', async (params, env) => {
 		});
 	}
 
-	return new Response(JSON.stringify(linkResponse), { status: 200 });
+	return new Response(JSON.stringify(linkResponse), { 
+		status: 200,
+		headers: {
+			"content-type": "application/json;charset=UTF-8",
+		},
+	});
 });
 
 // GET link stats
-router.get('/api/links/:id/stats', async (params, env) => {
+router.get('/api/links/:id/stats', async (request: WorkerRequest, env: Env) => {
 	// get link
-	const response = await env.LINK_SHORTENER.getWithMetadata(params.params.id);
+	const response = await env.LINK_SHORTENER.getWithMetadata(request.params.id);
 
 	// check if exists
 	if (response.value === null || response.metadata === null) {
@@ -115,7 +111,7 @@ router.get('/api/links/:id/stats', async (params, env) => {
 
 	// return response
 	const statResponse: IStatResponse = {
-		"slug": params.params.id,
+		"slug": request.params.id,
 		"url": value,
 		"hits": metadata.hits,
 	}
@@ -124,8 +120,7 @@ router.get('/api/links/:id/stats', async (params, env) => {
 });
 
 // GET QR code
-router.get('/api/links/:id/qr', async (request) => {
-	console.log(request.params);
+router.get('/api/links/:id/qr', async (request: WorkerRequest) => {
 	const url = `${new URL(request.url).origin}/${request.params.id}`;
 	const qr = imageSync(url, { type: 'png' });
 	return new Response(qr, {
@@ -136,17 +131,18 @@ router.get('/api/links/:id/qr', async (request) => {
 });
 
 // DELETE link
-router.delete('/api/links/:id', async (params, env) => {
-	env.LINK_SHORTENER.delete(params.params.id);
+router.delete('/api/links/:id', async (request: WorkerRequest, env: Env) => {
+	env.LINK_SHORTENER.delete(request.params.id);
 	return new Response(JSON.stringify({
 		"message": "Link deleted.",
 	}), { status: 200 });
 });
 
 // GET item
-router.get('/api/links/:id', async (params, env) => {
+router.get('/api/links/:id', async (request: WorkerRequest, env: Env) => {
 	// get link
-	const response = await env.LINK_SHORTENER.getWithMetadata(params.params.id);
+	//const response = await env.LINK_SHORTENER.getWithMetadata(request.params.id);
+	const response: { value: string; metadata: Metadata; } = await env.LINK_SHORTENER.getWithMetadata(request.params.id);
 
 	// check if slug exists
 	if (response.value === null || response.metadata === null) {
@@ -164,9 +160,9 @@ router.get('/api/links/:id', async (params, env) => {
 
 	// return response
 	const linkResponse: IlinkResponse = {
-		"slug": params.params.id,
+		"slug": request.params.id,
 		"url": value,
-		"expiration": metadata.expiration,
+		"expiration": metadata.expiration || 0,
 		"meta": metadata.meta,
 		"hits": metadata.hits,
 		"owner": metadata.owner,
@@ -174,102 +170,42 @@ router.get('/api/links/:id', async (params, env) => {
 	return new Response(JSON.stringify(linkResponse), { status: 200 });
 });
 
-// POST to the collection
-router.post('/api/links', async (request, env) => {
-	const content: ICreateLinkObject = await request.json();
-
-	// validate the content
-	if (!content.url) {
-		return new Response(JSON.stringify({
-			"error": "URL is required.",
-		}), {
-			status: 400,
-			headers: {
-				"content-type": "application/json;charset=UTF-8",
-			},
-		});
-	}
-
-	// get variables
-	const url = content.url;
-	const ttl = content.ttl || 7776000; // 90 days
-	const meta = content.meta || {};
-	const owner = content.owner || 'anonymous';
-
-	// generate slug
-	const nanoid = customAlphabet(
-		'0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
-		6,
-	);
-	const slug = nanoid();
-
-	// check if slug exists
-	try {
-		const check = await env.LINK_SHORTENER.get(slug);
-		if (check !== null) {
-			return new Response(JSON.stringify({
-				"error": "Slug already exists.",
-			}), {
-				status: 404,
-				headers: {
-					"content-type": "application/json;charset=UTF-8",
-				},
-			});
-		}
-	}
-	catch (e) {
-		return new Response(JSON.stringify({
-			"error": "Slug already exists.",
-		}), {
-			status: 404,
-			headers: {
-				"content-type": "application/json;charset=UTF-8",
-			},
-		});
-	}
-
-	// get title from url
-	const urlBody = await fetch(url, {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'text/html',
-		},
-	});
-	const urlText = await urlBody.text();
-	// @ts-ignore
-	const title = urlText.match(/<title[^>]*>([^<]+)<\/title>/)[1] || 'Untitled';
-
-
-	// create link
-	await env.LINK_SHORTENER.put(slug, url, {
-		metadata: {
-			meta: {
-				title: title ? title : 'Untitled',
-				...meta,
-			},
-			hits: 0,
-			owner: owner,
-			url: url,
-			expiration: ttl,
-		},
-		expirationTtl: ttl
-	});
-
-	// short url
-	const shortUrl = `${new URL(request.url).origin}/${slug}`;
-
-	// return response
-	return new Response(JSON.stringify({
-		"slug": slug,
-		"url": url,
-		"ttl": ttl,
-		"meta": meta,
-		"owner": owner,
-		"short_url": shortUrl,
-	}), { status: 201 });
+// Internal POST link
+router.post('/api/links', async (request: WorkerRequest, env: Env) => {
+	return await handleCreateLink(request, env);
 });
 
-router.get('/', async (request) => {
+// Publicly accessible API POST link
+router.post('/api/external/links', async (request: WorkerRequest, env: Env) => {
+	// if authorization header is not set, return 401
+	if (!request.headers.get('authorization')) {
+		return new Response(JSON.stringify({
+			"error": "Unauthorized.",
+		}), {
+			status: 401,
+			headers: {
+				"content-type": "application/json;charset=UTF-8",
+			},
+		});
+	}
+	
+	const apiKey = request.headers.get('authorization')?.split(' ')[1] || '';
+
+	// check if api key is valid
+	if (apiKey !== env.API_KEY) {
+		return new Response(JSON.stringify({
+			"error": "Unauthorized.",
+		}), {
+			status: 401,
+			headers: {
+				"content-type": "application/json;charset=UTF-8",
+			},
+		});
+	}
+	return await handleCreateLink(request, env);
+});
+
+router.get('/', async (request: WorkerRequest) => {
 	// redirect to the dashboard page
 	return Response.redirect(new URL(request.url).origin + '/dashboard', 307);
 });

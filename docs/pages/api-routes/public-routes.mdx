@@ -6,4 +6,38 @@ import { Callout } from 'nextra/components'
     This project relies on Cloudflare's Zero Trust for authenticating requests to the core API routes. This means that core routes will be exposed publically if Zero Trust is not configured. See [Zero Trust Setup](/zero-trust-setup) for more information on how to configure Zero Trust.
 </Callout>
 
-Coming soon 🚧
+## GET /api/external/links
+Endpoint allows for creating links using a publically accessible API. This is useful for creating links from external services.
+
+### Headers
+| Header | Description |
+| ------ | ----------- |
+| `Authorization` | An API key called `API_KEY` set in the `wrangler.toml`. |
+
+### Body
+| Parameter | Description | Required | Default |
+| --------- | ----------- | -------- | ------- |
+| `url` | The URL to shorten. | Yes | N/A |
+| `ttl` | Time in seconds from creation that the link should be deleted | No | 7776000 (90 days) |
+| `meta` | Metadata to store with the link. | No | Empty object |
+| `owner` | The owner of the link. | No | 'anonymous' |
+
+### Response
+| Status Code | Description |
+| ----------- | ----------- |
+| 200 | Link created successfully. |
+| 400 | Missing required parameters. |
+| 401 | Invalid API key. |
+
+#### 200 Response
+```json
+{
+    "slug": "example",
+    "url": "https://example.com",
+    "ttl": 7776000,
+    "meta": {},
+    "owner": "anonymous",
+    "short_url": "https://example.ly/123"
+}
+```
+
