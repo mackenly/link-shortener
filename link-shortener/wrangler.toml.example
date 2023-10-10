@@ -5,7 +5,6 @@ node_compat = true
 
 # Variable bindings. These are arbitrary, plaintext strings (similar to environment variables)
 # Note: Use secrets to store sensitive data.
-[vars]
 API_KEY = "super-secure-password"
 
 # Allow HTML and CSS files to be imported from within TypeScript files.
