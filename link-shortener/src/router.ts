@@ -205,9 +205,14 @@ router.post('/api/external/links', async (request: WorkerRequest, env: Env) => {
 	return await handleCreateLink(request, env);
 });
 
-router.get('/', async (request: WorkerRequest) => {
-	// redirect to the dashboard page
-	return Response.redirect(new URL(request.url).origin + '/dashboard', 307);
+router.get('/', async (request: WorkerRequest, env: Env) => {
+	// redirect url env
+	const redirectUrl = env.ROOT_REDIRECT;
+	if (!redirectUrl || redirectUrl === '' || redirectUrl === 'undefined' || redirectUrl === 'null') {
+		return Response.redirect(new URL(request.url).origin + '/dashboard', 307);
+	} else {
+		return Response.redirect(redirectUrl, 307);
+	}
 });
 
 // 404 for everything else

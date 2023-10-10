@@ -22,6 +22,11 @@ describe("Worker", () => {
         expect(status).toBe(404);
         expect(headers.get("content-type")).toBe("application/json;charset=UTF-8");
     });
+    it("should redirect to redirect url for the root/index path", async () => {
+        const { redirected, url } = await worker.fetch(`http://${worker.address}:8787/`);
+        expect(redirected).toBe(true);
+        expect(url).toContain("https://mackenly.com");
+    });
     it("should return 200 for the dashboard", async () => {
         const { status, headers } = await worker.fetch(`http://${worker.address}:8787/dashboard`);
         expect(status).toBe(200);
