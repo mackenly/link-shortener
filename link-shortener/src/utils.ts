@@ -104,10 +104,12 @@ export async function handleCreateLink(request: WorkerRequest, env: Env): Promis
 }
 
 async function generateSlug(env: Env): Promise<string> {
+    // slug length
+    const slugLength = Number(env.SLUG_LENGTH) || 6;
     // generate slug
     const nanoid = customAlphabet(
         '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
-        6,
+        slugLength,
     );
     const slug: string = nanoid();
 
