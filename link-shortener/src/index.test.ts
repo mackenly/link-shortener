@@ -81,4 +81,36 @@ describe("Worker", () => {
         expect(redirectResponse.redirected).toBe(true);
         expect(redirectResponse.url).toContain("https://mackenly.com");
     });
+    it("should return 400 if ttl is less than 60", async () => {
+        const response = await worker.fetch(`http://${worker.address}:8787/api/external/links`, {
+            method: "POST",
+            headers: {
+                authorization: `Bearer testing-password`,
+            },
+            body: JSON.stringify({
+                url: "https://mackenly.com",
+                ttl: 59,
+            }),
+        });
+        expect(response.status).toBe(400);
+        expect(response.headers.get("content-type")).toBe("application/json;charset=UTF-8");
+        const responseBody: any = await response.json();
+        expect(responseBody.error).toBe("TTL must be greater than 60 seconds.");
+    });
+    it ("should return 400 if ttl is greater than 315360000", async () => {
+        const response = await worker.fetch(`http://${worker.address}:8787/api/external/links`, {
+            method: "POST",
+            headers: {
+                authorization: `Bearer testing-password`,
+            },
+            body: JSON.stringify({
+                url: "https://mackenly.com",
+                ttl: 315360001,
+            }),
+        });
+        expect(response.status).toBe(400);
+        expect(response.headers.get("content-type")).toBe("application/json;charset=UTF-8");
+        const responseBody: any = await response.json();
+        expect(responseBody.error).toBe("TTL must be less than 315360000 seconds.");
+    });
 });

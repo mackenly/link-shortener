@@ -43,6 +43,15 @@ export async function handleCreateLink(request: WorkerRequest, env: Env): Promis
                 "content-type": "application/json;charset=UTF-8",
             },
         });
+    } else if (ttl > Number(env.MAX_TTL)) {
+        return new Response(JSON.stringify({
+            "error": "TTL must be less than " + env.MAX_TTL + " seconds.",
+        }), {
+            status: 400,
+            headers: {
+                "content-type": "application/json;charset=UTF-8",
+            },
+        });
     }
 
     // generate slug
