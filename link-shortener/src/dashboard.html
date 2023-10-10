@@ -36,34 +36,34 @@
     </div>
     <script>
         customElements.define(
-                'link-item',
-                class extends HTMLElement {
-                    constructor() {
-                        super();
+            'link-item',
+            class extends HTMLElement {
+                constructor() {
+                    super();
 
-                        this.data = {
-                            title: this.getAttribute('link-title'),
-                            short_url: this.getAttribute('short-url'),
-                            true_url: this.getAttribute('true-url'),
-                            slug: this.getAttribute('slug'),
-                            hits: this.getAttribute('hits'),
-                            expiration: this.getAttribute('expiration'),
-                        };
+                    this.data = {
+                        title: this.getAttribute('link-title'),
+                        short_url: this.getAttribute('short-url'),
+                        true_url: this.getAttribute('true-url'),
+                        slug: this.getAttribute('slug'),
+                        hits: this.getAttribute('hits'),
+                        expiration: this.getAttribute('expiration'),
+                    };
 
-                        const template = document.getElementById('link-item');
-                        const templateContent = template.content;
+                    const template = document.getElementById('link-item');
+                    const templateContent = template.content;
 
-                        const shadowRoot = this.attachShadow({ mode: 'open' });
+                    const shadowRoot = this.attachShadow({ mode: 'open' });
 
-                        // add google material icons
-                        const link = document.createElement('link');
-                        link.setAttribute('rel', 'stylesheet');
-                        link.setAttribute('href', 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0');
-                        shadowRoot.appendChild(link);
+                    // add google material icons
+                    const link = document.createElement('link');
+                    link.setAttribute('rel', 'stylesheet');
+                    link.setAttribute('href', 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0');
+                    shadowRoot.appendChild(link);
 
-                        // add styles
-                        const style = document.createElement('style');
-                        style.textContent = `
+                    // add styles
+                    const style = document.createElement('style');
+                    style.textContent = `
                 .link-card {
                     display: flex;
                     flex-wrap: wrap;
@@ -212,12 +212,12 @@
                     background-color: #eee;
                 }
             `;
-                        shadowRoot.appendChild(style);
+                    shadowRoot.appendChild(style);
 
-                        // add template
-                        const linkItem = document.createElement('div');
-                        linkItem.setAttribute('class', 'link-card');
-                        linkItem.innerHTML = `
+                    // add template
+                    const linkItem = document.createElement('div');
+                    linkItem.setAttribute('class', 'link-card');
+                    linkItem.innerHTML = `
             <div class="link-title link-section">
                 <div class="link-header">
                     <h3>
@@ -276,22 +276,22 @@
             </div>
             `;
 
-                        shadowRoot.appendChild(linkItem);
+                    shadowRoot.appendChild(linkItem);
 
-                        shadowRoot.appendChild(templateContent.cloneNode(true));
+                    shadowRoot.appendChild(templateContent.cloneNode(true));
 
-                        // add data
-                        const clampedTitle = this.data.title.length > 30 ? this.data.title.substring(0, 30) + '...' : this.data.title;
-                        const linkHeader = shadowRoot.querySelector('.link-header');
-                        linkHeader.innerHTML =
-                            `
+                    // add data
+                    const clampedTitle = this.data.title.length > 30 ? this.data.title.substring(0, 30) + '...' : this.data.title;
+                    const linkHeader = shadowRoot.querySelector('.link-header');
+                    linkHeader.innerHTML =
+                        `
                 <h3>
                     <a target="_blank" href="` +
-                            this.data.true_url +
-                            `">
+                        this.data.true_url +
+                        `">
                         ` +
-                            clampedTitle +
-                            `
+                        clampedTitle +
+                        `
                     </a>
                 </h3>
                 <span class="material-symbols-outlined">
@@ -299,134 +299,134 @@
                 </span>
             `;
 
-                        const linkCopy = shadowRoot.querySelector('.link-copy input');
-                        linkCopy.setAttribute('value', this.data.short_url);
-                        linkCopy.setAttribute('onclick', 'window.open("' + this.data.short_url + '", "_blank")');
+                    const linkCopy = shadowRoot.querySelector('.link-copy input');
+                    linkCopy.setAttribute('value', this.data.short_url);
+                    linkCopy.setAttribute('onclick', 'window.open("' + this.data.short_url + '", "_blank")');
 
-                        const linkCopySpan = shadowRoot.querySelector('.link-copy span');
-                        linkCopySpan.setAttribute('onclick', 'navigator.clipboard.writeText("' + this.data.short_url + '")');
+                    const linkCopySpan = shadowRoot.querySelector('.link-copy span');
+                    linkCopySpan.setAttribute('onclick', 'navigator.clipboard.writeText("' + this.data.short_url + '")');
 
-                        const linkStat = shadowRoot.querySelectorAll('.link-stat');
-                        linkStat[0].setAttribute('onclick', 'navigator.share({ title: "' + this.data.title + '", url: "' + this.data.short_url + '" })');
-                        linkStat[1].setAttribute('onclick', 'navigator.clipboard.writeText("' + this.data.short_url + '")');
-                        linkStat[2].setAttribute('onclick', 'window.open("./api/links/' + this.data.slug + '/qr", "_blank")');
-                        linkStat[3].innerHTML = '<span class="material-symbols-outlined">trending_up</span>' + this.data.hits + ' views';
-                        linkStat[4].innerHTML =
-                            '<span class="material-symbols-outlined">hourglass_empty</span>Expires ' +
-                            new Date(this.data.expiration * 1000).toLocaleDateString();
-                        linkStat[5].setAttribute('onclick', 'deleteLink("' + this.data.slug + '")');
-                    }
+                    const linkStat = shadowRoot.querySelectorAll('.link-stat');
+                    linkStat[0].setAttribute('onclick', 'navigator.share({ title: "' + this.data.title + '", url: "' + this.data.short_url + '" })');
+                    linkStat[1].setAttribute('onclick', 'navigator.clipboard.writeText("' + this.data.short_url + '")');
+                    linkStat[2].setAttribute('onclick', 'window.open("./api/links/' + this.data.slug + '/qr", "_blank")');
+                    linkStat[3].innerHTML = '<span class="material-symbols-outlined">trending_up</span>' + this.data.hits + ' views';
+                    linkStat[4].innerHTML =
+                        '<span class="material-symbols-outlined">hourglass_empty</span>Expires ' +
+                        new Date(this.data.expiration * 1000).toLocaleDateString();
+                    linkStat[5].setAttribute('onclick', 'deleteLink("' + this.data.slug + '")');
                 }
-            );
+            }
+        );
 
-            async function handleSubmit(form) {
-                const url = form.url.value;
-                const ttl = form.ttl.value;
-                const result = document.getElementById('result');
-                result.innerHTML = '';
-                fetch('./api/links', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ url, ttl }),
+        async function handleSubmit(form) {
+            const url = form.url.value;
+            const ttl = form.ttl.value;
+            const result = document.getElementById('result');
+            result.innerHTML = '';
+            fetch('./api/links', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ url, ttl }),
+            })
+                .then((res) => res.json())
+                .then((res) => {
+                    if (res.error !== undefined && res.error !== null) {
+                        console.error(res);
+                        result.innerHTML = '<p>' + res.error + '</p>';
+                        return;
+                    } else {
+                        console.log(res);
+
+                        // page hostname
+                        const pageHostname = window.location.hostname;
+
+                        result.innerHTML =
+                            '<p>Your new link is <a href="' +
+                            res.short_url +
+                            '" target="_blank">' +
+                            res.short_url +
+                            '</a> and will expire on ' +
+                            new Date(Date.now() + Number(res.ttl) * 1000).toLocaleString() +
+                            '<br>Allow ~15 seconds to fully propagate across network.</p>';
+                    }
+                    getLinks();
                 })
-                    .then((res) => res.json())
-                    .then((res) => {
-                        if (res.error !== undefined && res.error !== null) {
-                            console.error(res);
-                            result.innerHTML = '<p>' + res.error + '</p>';
-                            return;
-                        } else {
-                            console.log(res);
+                .catch((err) => {
+                    console.error(err);
+                    result.innerHTML = '<p>Unknown error</p>';
+                });
+        }
 
-                            // page hostname
-                            const pageHostname = window.location.hostname;
-
-                            result.innerHTML =
-                                '<p>Your new link is <a href="' +
-                                res.short_url +
-                                '" target="_blank">' +
-                                res.short_url +
-                                '</a> and will expire on ' +
-                                new Date(Date.now() + Number(res.ttl) * 1000).toLocaleString() +
-                                '<br>Allow ~15 seconds to fully propagate across network.</p>';
-                        }
-                        getLinks();
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                        result.innerHTML = '<p>Unknown error</p>';
-                    });
-            }
-
-            async function getLinks() {
-                const list = document.getElementById('list');
-                list.innerHTML = '<h2>Active Links:</h2>';
-                fetch('./api/links')
-                    .then((res) => res.json())
-                    .then((res) => {
-                        if (res.error !== undefined && res.error !== null) {
-                            console.error(res);
-                            list.innerHTML = '<p>' + res.error + '</p>';
-                            return;
-                        } else {
-                            console.log(res);
-                            res.forEach((link) => {
-                                const data = {
-                                    title: link.meta.title,
-                                    short_url: location.protocol + '//' + location.host + '/' + link.slug,
-                                    true_url: link.url,
-                                    slug: link.slug,
-                                    hits: link.hits,
-                                    expiration: link.expiration,
-                                };
-                                list.innerHTML +=
-                                    `<link-item link-title="` +
-                                    data.title +
-                                    `" short-url="` +
-                                    data.short_url +
-                                    `" true-url="` +
-                                    data.true_url +
-                                    `" slug="` +
-                                    data.slug +
-                                    `" hits="` +
-                                    data.hits +
-                                    `" expiration="` +
-                                    data.expiration +
-                                    `"></link-item>`;
-                            });
-                        }
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                        list.innerHTML = '<p>Unknown error</p>';
-                    });
-            }
-
-            async function deleteLink(slug) {
-                fetch('./api/links/' + slug, {
-                    method: 'DELETE',
+        async function getLinks() {
+            const list = document.getElementById('list');
+            list.innerHTML = '<h2>Active Links:</h2>';
+            fetch('./api/links')
+                .then((res) => res.json())
+                .then((res) => {
+                    if (res.error !== undefined && res.error !== null) {
+                        console.error(res);
+                        list.innerHTML = '<p>' + res.error + '</p>';
+                        return;
+                    } else {
+                        console.log(res);
+                        res.forEach((link) => {
+                            const data = {
+                                title: link.meta.title,
+                                short_url: location.protocol + '//' + location.host + '/' + link.slug,
+                                true_url: link.url,
+                                slug: link.slug,
+                                hits: link.hits,
+                                expiration: link.expiration,
+                            };
+                            list.innerHTML +=
+                                `<link-item link-title="` +
+                                data.title +
+                                `" short-url="` +
+                                data.short_url +
+                                `" true-url="` +
+                                data.true_url +
+                                `" slug="` +
+                                data.slug +
+                                `" hits="` +
+                                data.hits +
+                                `" expiration="` +
+                                data.expiration +
+                                `"></link-item>`;
+                        });
+                    }
                 })
-                    .then((res) => res.json())
-                    .then((res) => {
-                        if (res.error !== undefined && res.error !== null) {
-                            console.error(res);
-                            alert(res.error);
-                            return;
-                        } else {
-                            console.log(res);
-                            alert('Link deleted');
-                        }
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                        alert('Unknown error');
-                    });
-                getLinks();
-            }
+                .catch((err) => {
+                    console.error(err);
+                    list.innerHTML = '<p>Unknown error</p>';
+                });
+        }
 
+        async function deleteLink(slug) {
+            fetch('./api/links/' + slug, {
+                method: 'DELETE',
+            })
+                .then((res) => res.json())
+                .then((res) => {
+                    if (res.error !== undefined && res.error !== null) {
+                        console.error(res);
+                        alert(res.error);
+                        return;
+                    } else {
+                        console.log(res);
+                        alert('Link deleted');
+                    }
+                })
+                .catch((err) => {
+                    console.error(err);
+                    alert('Unknown error');
+                });
             getLinks();
+        }
+
+        getLinks();
 
     </script>
 </body>
