@@ -27,4 +27,9 @@ describe("Worker", () => {
         expect(status).toBe(200);
         expect(headers.get("content-type")).toBe("text/html;charset=UTF-8");
     });
+    it("should return 200 for the dashboard styles", async () => {
+        const { status, headers } = await worker.fetch(`http://${worker.address}:8787/dashboard/styles.css`);
+        expect(status).toBe(200);
+        expect(headers.get("content-type")).toBe("text/css;charset=UTF-8");
+    });
 });
