@@ -1,4 +1,4 @@
-import { Request as WorkerRequest } from '@cloudflare/workers-types';
+import { Request } from '@cloudflare/workers-types';
 
 interface Env {
     API_KEY: string;
@@ -48,6 +48,12 @@ interface ICreateLinkResponse {
     meta: object;
     owner: string;
     short_url: string;
+}
+
+interface WorkerRequest extends Request {
+    params: {
+        id: string;
+    };
 }
 
 export type { IlinkResponse, IStatResponse, ICreateLinkObject, ICreateLinkResponse, Env, WorkerRequest, Metadata };

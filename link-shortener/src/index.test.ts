@@ -77,8 +77,6 @@ describe("Worker", () => {
         expect(responseBody.short_url).toBeDefined();
 
         const slug = responseBody.slug;
-        const shortUrl = responseBody.short_url;
-
         const redirectResponse = await worker.fetch(`http://${worker.address}:8787/${slug}`);
         expect(redirectResponse.redirected).toBe(true);
         expect(redirectResponse.url).toContain("https://mackenly.com");

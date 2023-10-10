@@ -29,9 +29,9 @@ router.get('/dashboard/styles.css', async (request: WorkerRequest) => {
 });
 
 // GET a slug to redirect
-router.get('/:id', async (params, env: Env) => {
+router.get('/:id', async (request: WorkerRequest, env: Env) => {
 	// get link
-	const response = await env.LINK_SHORTENER.getWithMetadata(params.params.id);
+	const response = await env.LINK_SHORTENER.getWithMetadata(request.params.id);
 
 	// check if exists
 	if (response.value === null || response.metadata === null) {
@@ -46,9 +46,10 @@ router.get('/:id', async (params, env: Env) => {
 	}
 
 	const { value, metadata } = response;
+	console.log(metadata);
 
 	// increment hits
-	await env.LINK_SHORTENER.put(params.params.id, value, {
+	await env.LINK_SHORTENER.put(request.params.id, value, {
 		metadata: {
 			meta: metadata.meta,
 			hits: Number(metadata.hits) + 1,
@@ -59,11 +60,11 @@ router.get('/:id', async (params, env: Env) => {
 	});
 
 	// return response
-	return Response.redirect(value, 301);
+	return Response.redirect(value, 307);
 });
 
 // GET all links
-router.get('/api/links', async (params, env: Env) => {
+router.get('/api/links', async (request: WorkerRequest, env: Env) => {
 	// get all links
 	const links = await env.LINK_SHORTENER.list();
 
@@ -81,13 +82,18 @@ router.get('/api/links', async (params, env: Env) => {
 		});
 	}
 
-	return new Response(JSON.stringify(linkResponse), { status: 200 });
+	return new Response(JSON.stringify(linkResponse), { 
+		status: 200,
+		headers: {
+			"content-type": "application/json;charset=UTF-8",
+		},
+	});
 });
 
 // GET link stats
-router.get('/api/links/:id/stats', async (params, env: Env) => {
+router.get('/api/links/:id/stats', async (request: WorkerRequest, env: Env) => {
 	// get link
-	const response = await env.LINK_SHORTENER.getWithMetadata(params.params.id);
+	const response = await env.LINK_SHORTENER.getWithMetadata(request.params.id);
 
 	// check if exists
 	if (response.value === null || response.metadata === null) {
@@ -105,7 +111,7 @@ router.get('/api/links/:id/stats', async (params, env: Env) => {
 
 	// return response
 	const statResponse: IStatResponse = {
-		"slug": params.params.id,
+		"slug": request.params.id,
 		"url": value,
 		"hits": metadata.hits,
 	}
@@ -114,9 +120,8 @@ router.get('/api/links/:id/stats', async (params, env: Env) => {
 });
 
 // GET QR code
-router.get('/api/links/:id/qr', async (params, request: WorkerRequest) => {
-	console.log(params);
-	const url = `${new URL(request.url).origin}/${params.id}`;
+router.get('/api/links/:id/qr', async (request: WorkerRequest) => {
+	const url = `${new URL(request.url).origin}/${request.params.id}`;
 	const qr = imageSync(url, { type: 'png' });
 	return new Response(qr, {
 		headers: {
@@ -126,18 +131,18 @@ router.get('/api/links/:id/qr', async (params, request: WorkerRequest) => {
 });
 
 // DELETE link
-router.delete('/api/links/:id', async (params, env: Env) => {
-	env.LINK_SHORTENER.delete(params.params.id);
+router.delete('/api/links/:id', async (request: WorkerRequest, env: Env) => {
+	env.LINK_SHORTENER.delete(request.params.id);
 	return new Response(JSON.stringify({
 		"message": "Link deleted.",
 	}), { status: 200 });
 });
 
 // GET item
-router.get('/api/links/:id', async (params, env: Env) => {
+router.get('/api/links/:id', async (request: WorkerRequest, env: Env) => {
 	// get link
-	//const response = await env.LINK_SHORTENER.getWithMetadata(params.params.id);
-	const response: { value: string; metadata: Metadata; } = await env.LINK_SHORTENER.getWithMetadata(params.params.id);
+	//const response = await env.LINK_SHORTENER.getWithMetadata(request.params.id);
+	const response: { value: string; metadata: Metadata; } = await env.LINK_SHORTENER.getWithMetadata(request.params.id);
 
 	// check if slug exists
 	if (response.value === null || response.metadata === null) {
@@ -155,7 +160,7 @@ router.get('/api/links/:id', async (params, env: Env) => {
 
 	// return response
 	const linkResponse: IlinkResponse = {
-		"slug": params.params.id,
+		"slug": request.params.id,
 		"url": value,
 		"expiration": metadata.expiration || 0,
 		"meta": metadata.meta,
