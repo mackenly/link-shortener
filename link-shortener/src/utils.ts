@@ -2,7 +2,19 @@ import { ICreateLinkResponse, ICreateLinkObject, WorkerRequest, Env } from './ty
 import { customAlphabet } from 'nanoid';
 
 export async function handleCreateLink(request: WorkerRequest, env: Env): Promise<Response> {
-    const content: ICreateLinkObject = await request.json();
+    var content: ICreateLinkObject;
+    try {
+        content = await request.json();
+    } catch (e) {
+        return new Response(JSON.stringify({
+            "error": "Invalid JSON.",
+        }), {
+            status: 400,
+            headers: {
+                "content-type": "application/json;charset=UTF-8",
+            },
+        });
+    }
 
     // validate the content
     if (!content.url) {
@@ -22,6 +34,17 @@ export async function handleCreateLink(request: WorkerRequest, env: Env): Promis
     const meta: object = content.meta || {};
     const owner: string = content.owner || 'anonymous';
 
+    if (ttl < 60) {
+        return new Response(JSON.stringify({
+            "error": "TTL must be greater than 60 seconds.",
+        }), {
+            status: 400,
+            headers: {
+                "content-type": "application/json;charset=UTF-8",
+            },
+        });
+    }
+
     // generate slug
     const slug: string = await generateSlug(env);
 
@@ -34,21 +57,31 @@ export async function handleCreateLink(request: WorkerRequest, env: Env): Promis
         title = 'Untitled';
     }
 
-
     // create link
-    await env.LINK_SHORTENER.put(slug, url, {
-        metadata: {
-            meta: {
-                title: title ? title : 'Untitled',
-                ...meta,
+    try {
+        await env.LINK_SHORTENER.put(slug, url, {
+            metadata: {
+                meta: {
+                    title: title ? title : 'Untitled',
+                    ...meta,
+                },
+                hits: 0,
+                owner: owner,
+                url: url,
+                expiration: ttl,
             },
-            hits: 0,
-            owner: owner,
-            url: url,
-            expiration: ttl,
-        },
-        expirationTtl: ttl
-    });
+            expirationTtl: ttl
+        });
+    } catch (e) {
+        return new Response(JSON.stringify({
+            "error": "An error occurred while creating the link.",
+        }), {
+            status: 500,
+            headers: {
+                "content-type": "application/json;charset=UTF-8",
+            },
+        });
+    }
 
     // short url
     const shortUrl = `${new URL(request.url).origin}/${slug}`;
@@ -62,12 +95,12 @@ export async function handleCreateLink(request: WorkerRequest, env: Env): Promis
         owner: owner,
         short_url: shortUrl,
     } as ICreateLinkResponse),
-    {
-        status: 200,
-        headers: {
-            "content-type": "application/json;charset=UTF-8",
-        },
-    });
+        {
+            status: 200,
+            headers: {
+                "content-type": "application/json;charset=UTF-8",
+            },
+        });
 }
 
 async function generateSlug(env: Env): Promise<string> {
@@ -101,7 +134,7 @@ async function getPageTitleFromURL(url: string): Promise<string> {
         headers: {
             'Content-Type': 'text/html',
         },
-    });
+    })
     const urlText = await urlBody.text();
     // @ts-ignore
     let title = urlText.match(/<title[^>]*>([^<]+)<\/title>/)[1] || 'Untitled';
@@ -117,7 +150,7 @@ async function getPageTitleFromURL(url: string): Promise<string> {
 
     // if not a valid title, return Untitled
     if (title.length === 0) {
-        title = 'No Page Title Found';
+        title = 'Untitled';
     }
 
     // return title

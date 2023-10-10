@@ -167,7 +167,7 @@ router.get('/api/links/:id', async (params, env: Env) => {
 
 // Internal POST link
 router.post('/api/links', async (request: WorkerRequest, env: Env) => {
-	handleCreateLink(request, env);
+	return await handleCreateLink(request, env);
 });
 
 // Publicly accessible API POST link
@@ -197,8 +197,7 @@ router.post('/api/external/links', async (request: WorkerRequest, env: Env) => {
 			},
 		});
 	}
-
-	handleCreateLink(request, env);
+	return await handleCreateLink(request, env);
 });
 
 router.get('/', async (request: WorkerRequest) => {
