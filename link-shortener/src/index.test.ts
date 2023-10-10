@@ -22,6 +22,11 @@ describe("Worker", () => {
         expect(status).toBe(404);
         expect(headers.get("content-type")).toBe("application/json;charset=UTF-8");
     });
+    it("should redirect to redirect url for the root/index path", async () => {
+        const { redirected, url } = await worker.fetch(`http://${worker.address}:8787/`);
+        expect(redirected).toBe(true);
+        expect(url).toContain("https://mackenly.com");
+    });
     it("should return 200 for the dashboard", async () => {
         const { status, headers } = await worker.fetch(`http://${worker.address}:8787/dashboard`);
         expect(status).toBe(200);
@@ -80,5 +85,55 @@ describe("Worker", () => {
         const redirectResponse = await worker.fetch(`http://${worker.address}:8787/${slug}`);
         expect(redirectResponse.redirected).toBe(true);
         expect(redirectResponse.url).toContain("https://mackenly.com");
+    });
+    it("should create short links with a path length of 6", async () => {
+        const response = await worker.fetch(`http://${worker.address}:8787/api/external/links`, {
+            method: "POST",
+            headers: {
+                authorization: `Bearer testing-password`,
+            },
+            body: JSON.stringify({
+                url: "https://mackenly.com",
+                ttl: 60,
+            }),
+        });
+        expect(response.status).toBe(200);
+        expect(response.headers.get("content-type")).toBe("application/json;charset=UTF-8");
+        const responseBody: any = await response.json();
+        expect(responseBody.slug).toBeDefined();
+        const slug = responseBody.slug;
+        expect(slug.length).toBe(6);
+    });
+    it("should return 400 if ttl is less than 60", async () => {
+        const response = await worker.fetch(`http://${worker.address}:8787/api/external/links`, {
+            method: "POST",
+            headers: {
+                authorization: `Bearer testing-password`,
+            },
+            body: JSON.stringify({
+                url: "https://mackenly.com",
+                ttl: 59,
+            }),
+        });
+        expect(response.status).toBe(400);
+        expect(response.headers.get("content-type")).toBe("application/json;charset=UTF-8");
+        const responseBody: any = await response.json();
+        expect(responseBody.error).toBe("TTL must be greater than 60 seconds.");
+    });
+    it ("should return 400 if ttl is greater than 315360000", async () => {
+        const response = await worker.fetch(`http://${worker.address}:8787/api/external/links`, {
+            method: "POST",
+            headers: {
+                authorization: `Bearer testing-password`,
+            },
+            body: JSON.stringify({
+                url: "https://mackenly.com",
+                ttl: 315360001,
+            }),
+        });
+        expect(response.status).toBe(400);
+        expect(response.headers.get("content-type")).toBe("application/json;charset=UTF-8");
+        const responseBody: any = await response.json();
+        expect(responseBody.error).toBe("TTL must be less than 315360000 seconds.");
     });
 });

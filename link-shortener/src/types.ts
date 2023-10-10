@@ -2,6 +2,9 @@ import { Request } from '@cloudflare/workers-types';
 
 interface Env {
     API_KEY: string;
+    MAX_TTL: number;
+    ROOT_REDIRECT: string;
+    SLUG_LENGTH: number;
     LINK_SHORTENER: {
         get: (key: string) => Promise<string>;
         getWithMetadata: (key: string) => Promise<{ value: string; metadata: Metadata; }>;
