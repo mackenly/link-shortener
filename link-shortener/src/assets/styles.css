@@ -1,5 +1,6 @@
 body {
-	background-color: #fff;
+	background-color: #191919;
+	color: white;
 	font-family: sans-serif;
 	font-size: 16px;
 	text-align: center;
@@ -8,20 +9,60 @@ body {
 	padding: 0;
 }
 
-.container {
+.row {
+	display: flex;
+	flex-wrap: nowrap;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 	margin: 0 auto;
 	max-width: 960px;
 	padding: 0 15px;
 }
 
-.row {
+form, .result {
+	width: max-content;
 	display: flex;
-	flex-wrap: wrap;
-	margin: 0 -15px;
+	justify-content: center;
+	background-color: rgba(256, 256, 256, 0.2);
+	border: 1px solid white;
+	border-radius: 15px;
+}
+
+form input, form select {
+	padding: 1rem;
+}
+
+form input:nth-child(1) {
+	border-radius: 15px 0 0 15px;
+}
+
+form input:nth-child(3) {
+	border-radius: 0 15px 15px 0;
+}
+
+.result {
+	margin-top: 50px;
+	padding: 1rem;
 }
 
 .col-12 {
 	flex: 0 0 100%;
 	max-width: 100%;
 	padding: 0 15px;
+}
+
+.credit {
+	text-align: center;
+	color: #ff6b08;
+	margin-top: 50px;
+}
+
+a {
+	color: #ff6b08;
+}
+
+a:hover {
+	color: #ff6b08;
+	text-decoration: none;
 }

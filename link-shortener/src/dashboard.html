@@ -15,23 +15,27 @@
     <template id="link-item"></template>
     <div class="container">
         <div class="row">
-            <div class="col-12">
-                <h1>Link Shortener</h1>
-                <form action="javascript:;" onsubmit="handleSubmit(this)">
-                    <input type="url" name="url" placeholder="URL" />
-                    <select name="ttl" id="ttl">
-                        <option value="7776000">90 days</option>
-                        <option value="10800">3 hours</option>
-                        <option value="86400">1 day</option>
-                        <option value="2592000">30 days</option>
-                        <option value="31536000">1 year</option>
-                        <option value="315360000">10 years</option>
-                    </select>
-                    <input type="submit" value="Submit" />
-                </form>
-                <div id="result"></div>
-            </div>
+            <h1>Link Shortener</h1>
+            <p>
+                Create short links and QR codes for your long links.
+            </p>
+            <form action="javascript:;" onsubmit="handleSubmit(this)">
+                <input type="url" name="url" placeholder="URL" />
+                <select name="ttl" id="ttl">
+                    <option value="7776000">90 days</option>
+                    <option value="10800">3 hours</option>
+                    <option value="86400">1 day</option>
+                    <option value="2592000">30 days</option>
+                    <option value="31536000">1 year</option>
+                    <option value="315360000">10 years</option>
+                </select>
+                <input type="submit" value="Submit" />
+            </form>
+            <div id="result"></div>
             <div class="col-12" id="list"></div>
+            <p class="credit">
+                Made in Tennessee 🧡 by <a href="https://mackenly.com/">Mackenly Jones</a>
+            </p>
         </div>
     </div>
     <script>
@@ -43,6 +47,8 @@
 
                     this.data = {
                         title: this.getAttribute('link-title'),
+                        image: this.getAttribute('image'),
+                        icon: this.getAttribute('icon'),
                         short_url: this.getAttribute('short-url'),
                         true_url: this.getAttribute('true-url'),
                         slug: this.getAttribute('slug'),
@@ -158,9 +164,13 @@
                     align-items: center;
                 }
 
+                .link-header h3 a {
+                    color: #ff6b08;
+                }
+
                 .link-header span {
                     font-size: 1.3rem;
-                    color: #000;
+                    color: #ff6b08;
                     cursor: pointer;
                     height: 100%;
                     padding: 0.3rem;
@@ -212,6 +222,16 @@
                     background-color: #eee;
                 }
             `;
+
+            if (this.data.image !== null && this.data.image !== undefined && this.data.image !== '') {
+                style.textContent += `
+                .link-card {
+                    background-image: url(${this.data.image});
+                    background-position: center;
+                    background-size: cover;
+                    background-clip: padding-box;
+                }`;
+            }
                     shadowRoot.appendChild(style);
 
                     // add template
@@ -219,6 +239,7 @@
                     linkItem.setAttribute('class', 'link-card');
                     linkItem.innerHTML = `
             <div class="link-title link-section">
+                <img height="24" width="24">
                 <div class="link-header">
                     <h3>
                         <a target="_blank"></a>
@@ -281,6 +302,15 @@
                     shadowRoot.appendChild(templateContent.cloneNode(true));
 
                     // add data
+                    const linkIcon = shadowRoot.querySelector('.link-title img');
+                    if (this.data.icon !== null) {
+                        linkIcon.setAttribute('src', this.data.icon);
+                    } else if (this.data.image !== null) {
+                        linkIcon.setAttribute('src', this.data.image);
+                    } else {
+                        linkIcon.setAttribute('src', 'https://fav.farm/🔗');
+                    }
+
                     const clampedTitle = this.data.title.length > 30 ? this.data.title.substring(0, 30) + '...' : this.data.title;
                     const linkHeader = shadowRoot.querySelector('.link-header');
                     linkHeader.innerHTML =
@@ -344,13 +374,25 @@
                         const pageHostname = window.location.hostname;
 
                         result.innerHTML =
-                            '<p>Your new link is <a href="' +
-                            res.short_url +
-                            '" target="_blank">' +
-                            res.short_url +
-                            '</a> and will expire on ' +
-                            new Date(Date.now() + Number(res.ttl) * 1000).toLocaleString() +
-                            '<br>Allow ~15 seconds to fully propagate across network.</p>';
+                            `<div class="result"><p>
+                                Your new link is <a href="${res.short_url}" target="_blank">
+                                ${res.short_url}</a> 
+                                and will expire on 
+                                ${new Date(Date.now() + Number(res.ttl) * 1000).toLocaleString() }
+                                <br>
+                                Allow ~15 seconds to fully propagate across network.
+                                <br><br>
+                                <a href="/api/links/${res.slug}/qr" target="_blank">
+                                    <img src="/api/links/${res.slug}/qr" alt="QR Code" width="200" height="200">
+                                </a>
+                                <br><br>
+                                <a href="javascript:;" onclick="window.location.reload();">
+                                    Create new link
+                                </a>
+                            </p></div>`;
+
+                        // hide the form
+                        form.style.display = 'none';
                     }
                     getLinks();
                 })
@@ -375,6 +417,8 @@
                         res.forEach((link) => {
                             const data = {
                                 title: link.meta.title,
+                                image: link.meta.image,
+                                icon: link.meta.icon,
                                 short_url: location.protocol + '//' + location.host + '/' + link.slug,
                                 true_url: link.url,
                                 slug: link.slug,
@@ -384,6 +428,10 @@
                             list.innerHTML +=
                                 `<link-item link-title="` +
                                 data.title +
+                                `" image="` +
+                                data.image +
+                                `" icon="` +
+                                data.icon +
                                 `" short-url="` +
                                 data.short_url +
                                 `" true-url="` +
