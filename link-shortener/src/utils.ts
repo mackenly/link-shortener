@@ -58,12 +58,16 @@ export async function handleCreateLink(request: WorkerRequest, env: Env): Promis
     const slug: string = await generateSlug(env);
 
     // get title from url
-    let title: string;
+    let pageMeta: any = {};
     try {
-        title = await getPageTitleFromURL(url);
+        pageMeta = await getPageTitleFromURL(url);
     }
     catch (e) {
-        title = 'Untitled';
+        pageMeta = {
+            title: 'Untitled',
+            image: '',
+            icon: '',
+        };
     }
 
     // create link
@@ -71,7 +75,9 @@ export async function handleCreateLink(request: WorkerRequest, env: Env): Promis
         await env.LINK_SHORTENER.put(slug, url, {
             metadata: {
                 meta: {
-                    title: title ? title : 'Untitled',
+                    title: pageMeta.title ? pageMeta.title : 'Untitled',
+                    image: pageMeta.image ? pageMeta.image : '',
+                    icon: pageMeta.icon ? pageMeta.icon : '',
                     ...meta,
                 },
                 hits: 0,
@@ -138,7 +144,7 @@ async function generateSlug(env: Env): Promise<string> {
     return slug;
 }
 
-async function getPageTitleFromURL(url: string): Promise<string> {
+async function getPageTitleFromURL(url: string): Promise<Object> {
     // get title from url
     const urlBody = await fetch(url, {
         method: 'GET',
@@ -146,7 +152,70 @@ async function getPageTitleFromURL(url: string): Promise<string> {
             'Content-Type': 'text/html',
         },
     })
-    const urlText = await urlBody.text();
+
+    let pageMeta: any = {};
+    try {
+        pageMeta = await getAttributes(urlBody);
+    } catch (e) {
+        console.log(e);
+    }
+
+    if (pageMeta[0]) {
+        if (pageMeta[0].startsWith('/')) {
+            pageMeta[0] = new URL(url).origin + pageMeta[0];
+        }
+    }
+
+    if (pageMeta[1]) {
+        if (pageMeta[1].length < 1 || pageMeta[1] == 'Attention Required Cloudflare') {
+            pageMeta[1] = 'Untitled';
+        }
+    }
+
+    if (pageMeta[2]) {
+        if (pageMeta[2].startsWith('/')) {
+            pageMeta[2] = new URL(url).origin + pageMeta[2];
+        }
+    } else {
+        pageMeta[2] = new URL(url).origin + '/favicon.ico';
+    }
+
+    console.log(pageMeta);
+    return {
+        title: pageMeta[1],
+        image: pageMeta[0],
+        icon: pageMeta[2],
+    };
+}
+
+async function getAttributes(response: Response) {
+    class AttributeScraper {
+        attr: string
+        value: string
+
+        constructor(attr: string) {
+            this.attr = attr
+            this.value = ''
+        }
+
+        element(element: Element) {
+            if (this.value) return
+
+            this.value = element.getAttribute(this.attr) || ''
+        }
+    }
+
+    const clonedStream = response.clone();
+
+    const ogImageScrapper = new AttributeScraper("content");
+    const iconScrapper = new AttributeScraper("href");
+
+    const rewriter = await new HTMLRewriter()
+        .on(`meta[property="og:image"]`, ogImageScrapper)
+        .on(`link[rel="icon"]`, iconScrapper)
+        .transform(new Response(response.body, response)).arrayBuffer()
+
+    const urlText = await clonedStream.text();
     // @ts-ignore
     let title = urlText.match(/<title[^>]*>([^<]+)<\/title>/)[1] || 'Untitled';
 
@@ -164,6 +233,9 @@ async function getPageTitleFromURL(url: string): Promise<string> {
         title = 'Untitled';
     }
 
-    // return title
-    return title;
+    return [
+        ogImageScrapper.value,
+        title,
+        iconScrapper.value,
+    ]
 }
