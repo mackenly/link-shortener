@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20231016.0",
-    "@types/qr-image": "^3.2.7",
+    "@types/qr-image": "^3.2.8",
     "itty-router": "^4.0.23",
     "typescript": "^5.2.2",
     "vitest": "^0.34.6",
