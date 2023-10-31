@@ -123,7 +123,7 @@ async function generateSlug(env: Env): Promise<string> {
     const slugLength = Number(env.SLUG_LENGTH) || 6;
     // generate slug
     const nanoid = customAlphabet(
-        '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
+        '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-',
         slugLength,
     );
     const slug: string = nanoid();

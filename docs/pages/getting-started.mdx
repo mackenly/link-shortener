@@ -12,7 +12,7 @@ Set through environment variables, there are several configuration options to ma
 - `API_KEY` - The API key used to authenticate requests to the public/external API routes.
 - `MAX_TTL` - The maximum time to live for a link, in seconds. Defaults to 10 years. Minimum is 60 seconds for any link which is a platform limitation.
 - `ROOT_REDIRECT` - The URL to redirect to when the root path is requested. Defaults to `https://mackenly.com`. If left blank, it will redirect to the `/dashboard` page.
-- `SLUG_LENGTH` - The length of the slug to generate for each link. Defaults to 6.
+- `SLUG_LENGTH` - The length of the slug to generate for each link. Defaults to 6. If being used at scale, you might should consider increasing this, but the good thing is that you can change it at any time and it will still work for existing links. [Collision Pobability Calculator](https://zelark.github.io/nano-id-cc/)
 
 Example configuration:
 ```toml
