@@ -13,14 +13,14 @@ Cloudflare Worker Based Link Shortener
 - No database required (uses KV)
 - Create links via dashboard or API
 - Secured using Cloudflare Access Zero Trust
-- Built in QR code generation
+- Built-in QR code generation
 - Click counter for analytics
 - Automatic link expiration (3 hours to 10 years)
 
 ![Dashboard With New Link](docs/pages/images/dashboard-after-creating-link.png)
 
 ## Getting Started
-See documentation for the [getting started](https://linkshortener.dev/getting-started) guide.
+See the documentation for the [getting started](https://linkshortener.dev/getting-started) guide.
 
 ### API Documentation
 See [API Route Docs](https://linkshortener.dev/api-routes) for more information.
@@ -36,9 +36,9 @@ This tool is secured using Cloudflare Zero Trust's Access control tool. This all
 
 ### TODO:
  - [ ] Provide hosted demo (limited to 30-second links)
- - [ ] Explore adding, integrating, or building an an analytics solution
+ - [ ] Explore adding, integrating, or building an analytics solution
  - [ ] Explore link landing pages confirming the URL users are visiting
- - [ ] Document [deployment process](https://github.com/mackenly/link-shortener/issues/7) and how to secure the app using [Zero Trust](https://github.com/mackenly/link-shortener/issues/6)
+ - [ ] Document the [deployment process](https://github.com/mackenly/link-shortener/issues/7) and how to secure the app using [Zero Trust](https://github.com/mackenly/link-shortener/issues/6)
 
 ## License
 This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
