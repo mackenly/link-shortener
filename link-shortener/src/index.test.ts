@@ -66,7 +66,7 @@ describe("Worker", () => {
                 authorization: `Bearer testing-password`,
             },
             body: JSON.stringify({
-                url: "https://mackenly.com",
+                url: "https://crtv.dev",
                 ttl: 61,
             }),
         });
@@ -75,7 +75,7 @@ describe("Worker", () => {
         expect(response.headers.get("content-type")).toBe("application/json;charset=UTF-8");
         const responseBody: any = await response.json();
         expect(responseBody.slug).toBeDefined();
-        expect(responseBody.url).toBe("https://mackenly.com");
+        expect(responseBody.url).toBe("https://crtv.dev");
         expect(responseBody.ttl).toBe(61);
         expect(responseBody.meta).toEqual({});
         expect(responseBody.owner).toBe("anonymous");
@@ -84,7 +84,39 @@ describe("Worker", () => {
         const slug = responseBody.slug;
         const redirectResponse = await worker.fetch(`http://${worker.address}:8787/${slug}`);
         expect(redirectResponse.redirected).toBe(true);
-        expect(redirectResponse.url).toContain("https://mackenly.com");
+        expect(redirectResponse.url).toContain("https://crtv.dev");
+    });
+    it("should be able to redirect to a link multiple times", async () => {
+        // checks for problems with the hit counter not copying over data
+        const response = await worker.fetch(`http://${worker.address}:8787/api/external/links`, {
+            method: "POST",
+            headers: {
+                authorization: `Bearer testing-password`,
+            },
+            body: JSON.stringify({
+                url: "https://tricitiesmediagroup.com",
+                ttl: 61,
+            }),
+        });
+
+        expect(response.status).toBe(200);
+        expect(response.headers.get("content-type")).toBe("application/json;charset=UTF-8");
+        const responseBody: any = await response.json();
+        expect(responseBody.slug).toBeDefined();
+        expect(responseBody.url).toBe("https://tricitiesmediagroup.com");
+        expect(responseBody.ttl).toBe(61);
+        expect(responseBody.meta).toEqual({});
+        expect(responseBody.owner).toBe("anonymous");
+        expect(responseBody.short_url).toBeDefined();
+
+        const slug = responseBody.slug;
+        const redirectResponse = await worker.fetch(`http://${worker.address}:8787/${slug}`);
+        expect(redirectResponse.redirected).toBe(true);
+        expect(redirectResponse.url).toContain("https://tricitiesmediagroup.com");
+
+        const redirectResponse2 = await worker.fetch(`http://${worker.address}:8787/${slug}`);
+        expect(redirectResponse2.redirected).toBe(true);
+        expect(redirectResponse2.url).toContain("https://tricitiesmediagroup.com");
     });
     it("should create short links with a path length of 6", async () => {
         const response = await worker.fetch(`http://${worker.address}:8787/api/external/links`, {

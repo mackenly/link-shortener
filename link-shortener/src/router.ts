@@ -46,7 +46,6 @@ router.get('/:id', async (request: WorkerRequest, env: Env) => {
 	}
 
 	const { value, metadata } = response;
-	console.log(metadata);
 
 	// increment hits
 	await env.LINK_SHORTENER.put(request.params.id, value, {
@@ -55,6 +54,7 @@ router.get('/:id', async (request: WorkerRequest, env: Env) => {
 			hits: Number(metadata.hits) + 1,
 			owner: metadata.owner,
 			url: metadata.url,
+			expiration: metadata.expiration,
 		},
 		expirationTtl: metadata.expiration || 0,
 	});
