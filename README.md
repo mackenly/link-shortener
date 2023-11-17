@@ -1,5 +1,6 @@
 # Link Shortener
 ![Tests](https://github.com/mackenly/link-shortener/actions/workflows/tests.yml/badge.svg)
+![Demo](https://github.com/mackenly/link-shortener/actions/workflows/deploy.yml/badge.svg)
 
 Cloudflare Worker Based Link Shortener | [✨ Demo](https://demo.linkshortener.dev/dashboard) | [📖 Documentation](https://linkshortener.dev)
 
@@ -35,10 +36,10 @@ This tool is secured using Cloudflare Zero Trust's Access control tool. This all
 - If adding new features, first create an issue to discuss the feature before submitting a PR. Please include tests for new features.
 
 ### TODO:
- - [ ] Provide hosted demo (limited to 30-second links)
+ - [x] Provide hosted demo (limited to 60-second links) > [demo.linkshortener.dev](https://demo.linkshortener.dev)
  - [ ] Explore adding, integrating, or building an analytics solution
  - [ ] Explore link landing pages confirming the URL users are visiting
- - [ ] Document the [deployment process](https://github.com/mackenly/link-shortener/issues/7) and how to secure the app using [Zero Trust](https://github.com/mackenly/link-shortener/issues/6)
+ - [x] Document the [deployment process](https://github.com/mackenly/link-shortener/issues/7) and how to secure the app using [Zero Trust](https://github.com/mackenly/link-shortener/issues/6)
 
 ## License
 This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE) file for details.
