@@ -1,9 +1,9 @@
+name: Deploy Demo
+
 on:
   push:
     branches:
       - main
-    paths:
-      - 'link-shortener/**'
 
 jobs:
   deploy:
