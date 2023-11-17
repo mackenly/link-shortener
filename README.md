@@ -1,7 +1,7 @@
-# link-shortener
+# Link Shortener
 ![Tests](https://github.com/mackenly/link-shortener/actions/workflows/tests.yml/badge.svg)
 
-Cloudflare Worker Based Link Shortener
+Cloudflare Worker Based Link Shortener | [✨ Demo](https://link-shortener-demo.mackenly.workers.dev/dashboard) | [📖 Documentation](https://linkshortener.dev)
 
 ![Dashboard](docs/pages/images/dashboard-showing-link-creator.png)
 
