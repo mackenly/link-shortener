@@ -18,3 +18,18 @@ Example configuration:
 ```toml
 vars = { API_KEY = "super-secure-password", MAX_TTL = "315360000", ROOT_REDIRECT = "https://mackenly.com", SLUG_LENGTH = "6" }
 ```
+
+## Bindings
+The database for this tool is Cloudflare KV which is included in Workers free and paid plan. You can create a KV store with the [Wrangler CLI](https://developers.cloudflare.com/kv/get-started/#3-create-a-kv-namespace) or via the [Dashboard](https://dash.cloudflare.com/?to=/:account/workers/kv/namespaces).
+
+In your `wrangler.toml` file, you can add the following to bind your KV store to the `LINK_SHORTENER` namespace:
+```toml
+kv_namespaces = [
+    { binding = "LINK_SHORTENER", id = "yourkey", preview_id = "yourkey" }
+]
+```
+
+## Custom Domain
+You'll need to edit the route(s) in the `wrangler.toml` file to match your [custom domain](https://developers.cloudflare.com/workers/configuration/routing/custom-domains).
+
+Alternatively, you can remove the routes section from your `wrangler.toml` and remove the line that says `workers_dev = false`. This will allow you to use your `project.example.workers.dev` URL.
