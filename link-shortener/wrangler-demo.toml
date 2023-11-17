@@ -1,4 +1,4 @@
-name = "link-shortener"
+name = "link-shortener-demo"
 main = "src/index.ts"
 compatibility_date = "2023-08-14"
 node_compat = true
@@ -10,7 +10,7 @@ routes = [
 
 # Variable bindings. These are arbitrary, plaintext strings (similar to environment variables)
 # Note: Use secrets to store sensitive data.
-vars = { API_KEY = "super-secure-password", MAX_TTL = "315360000", ROOT_REDIRECT = "https://mackenly.com", SLUG_LENGTH = "6" }
+vars = { API_KEY = "#b6Ybk~@p!74%3@WCi", MAX_TTL = "61", ROOT_REDIRECT = "", SLUG_LENGTH = "6" }
 
 # Allow HTML and CSS files to be imported from within TypeScript files.
 rules = [
@@ -21,5 +21,5 @@ rules = [
 # Bind a KV Namespace. Use KV as persistent storage for small key-value pairs.
 # Docs: https://developers.cloudflare.com/workers/runtime-apis/kv
 kv_namespaces = [
-    { binding = "LINK_SHORTENER", id = "yourkey", preview_id = "yourkey" }
+    { binding = "LINK_SHORTENER", id = "cd4c59e543e841d080f1c9fc017bb7dc", preview = "d1a4c7f10ee049a2a1b4516b9705f7c5" }
 ]
