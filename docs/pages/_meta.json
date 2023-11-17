@@ -1,7 +1,8 @@
 {
     "index": "Home",
     "getting-started": "Getting Started",
-    "zero-trust-setup": "Zero Trust Setup",
+    "github-actions": "GitHub Actions",
+    "zero-trust-setup": "Zero Trust Security Setup",
     "api-routes": "API Docs",
     "Sponsor": {
         "title": "Sponsor Project",

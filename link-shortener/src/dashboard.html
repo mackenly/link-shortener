@@ -22,12 +22,46 @@
             <form action="javascript:;" onsubmit="handleSubmit(this)">
                 <input type="url" name="url" placeholder="URL" />
                 <select name="ttl" id="ttl">
-                    <option value="7776000">90 days</option>
-                    <option value="10800">3 hours</option>
-                    <option value="86400">1 day</option>
-                    <option value="2592000">30 days</option>
-                    <option value="31536000">1 year</option>
-                    <option value="315360000">10 years</option>
+                    <script>
+                        const max_ttl = Number(REPLACE_MAX_TTL);
+                        // if max_ttl is equal to or less than 7776000 (90 days), then show 90 days
+                        if (max_ttl >= 7776000) {
+                            document.getElementById('ttl').innerHTML += '<option value="7776000">90 days</option>';
+                            // also include a separator
+                            document.getElementById('ttl').innerHTML += '<option disabled>──────────</option>';
+                        }
+                        // if max_ttl is equal to or less than 10800 (3 hours), then show 3 hours
+                        if (max_ttl >= 10800) {
+                            document.getElementById('ttl').innerHTML += '<option value="10800">3 hours</option>';
+                        }
+                        // if max_ttl is equal to or less than 86400 (1 day), then show 1 day
+                            if (max_ttl >= 86400) {
+                                document.getElementById('ttl').innerHTML += '<option value="86400">1 day</option>';
+                            }
+                        // if max_ttl is equal to or less than 2592000 (30 days), then show 30 days
+                        if (max_ttl >= 2592000) {
+                            console.log('30 days');
+                            document.getElementById('ttl').innerHTML += '<option value="2592000">30 days</option>';
+                        }
+                        // if max_ttl is equal to or less than 7776000 (90 days), then show 90 days
+                        if (max_ttl >= 7776000) {
+                            document.getElementById('ttl').innerHTML += '<option value="7776000">90 days</option>';
+                        }
+                        // if max_ttl is equal to or less than 31536000 (1 year), then show 1 year
+                        if (max_ttl >= 31536000) {
+                            document.getElementById('ttl').innerHTML += '<option value="31536000">1 year</option>';
+                        }
+                        // if max_ttl is equal to or less than 315360000 (10 years), then show 10 years
+                        if (max_ttl >= 315360000) {
+                            document.getElementById('ttl').innerHTML += '<option value="315360000">10 years</option>';
+                        }
+                        // if less than 1 day show custom option
+                        if (max_ttl < 86400) {
+                            // value in hours or minutes
+                            const value = max_ttl < 3600 ? Math.floor(max_ttl / 60) + ' minutes' : Math.floor(max_ttl / 3600) + ' hours';
+                            document.getElementById('ttl').innerHTML += `<option value="${max_ttl}">${value}</option>`;
+                        }
+                    </script>
                 </select>
                 <input type="submit" value="Submit" />
             </form>
@@ -409,9 +443,7 @@
                 .then((res) => res.json())
                 .then((res) => {
                     if (res.error !== undefined && res.error !== null) {
-                        console.error(res);
-                        list.innerHTML = '<p>' + res.error + '</p>';
-                        return;
+                        throw new Error(res.error);
                     } else {
                         console.log(res);
                         res.forEach((link) => {
@@ -448,7 +480,7 @@
                 })
                 .catch((err) => {
                     console.error(err);
-                    list.innerHTML = '<p>Unknown error</p>';
+                    list.innerHTML = err.message ? `<p>${err.message}</p>` : '<p>Unknown error</p>';
                 });
         }
 

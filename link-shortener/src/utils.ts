@@ -87,9 +87,10 @@ export async function handleCreateLink(request: WorkerRequest, env: Env): Promis
             },
             expirationTtl: ttl
         });
-    } catch (e) {
+    } catch (e: any) {
+        console.log(e.message);
         return new Response(JSON.stringify({
-            "error": "An error occurred while creating the link.",
+            "error": "An error occurred while creating the link."
         }), {
             status: 500,
             headers: {
@@ -131,13 +132,19 @@ async function generateSlug(env: Env): Promise<string> {
     // check if slug exists
     try {
         const check = await env.LINK_SHORTENER.get(slug);
+        console.log(check);
         if (check !== null) {
             throw new Error('Slug already exists.');
         }
     }
-    catch (e) {
-        // recursively generate new slug
-        return generateSlug(env);
+    catch (e: any) {
+        console.log(e.message);
+        if (e.message === 'Slug already exists.') {
+            // recursively generate new slug
+            return generateSlug(env);
+        } else {
+            return slug;
+        }
     }
 
     // return slug

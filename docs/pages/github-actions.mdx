@@ -1,0 +1,26 @@
+import { Callout } from 'nextra/components'
+
+# Automate Deployments with GitHub Actions
+Located in the `.github/workflows` directory, the `deploy.yml` file contains the workflow that is used to deploy Link Shortener to your Cloudflare account. It is configured to run on every push to the `main` branch, and will deploy to the production environment. From your Cloudflare account you'll need to copy the account ID to a GitHub Repository Secret called `CLOUDFLARE_ACCOUNT_ID`. You'll also need to create a Cloudflare API Token from your Cloudflare profile with the `Edit Cloudflare Workers` permission template and add it to a GitHub Repository Secret called `CLOUDFLARE_API_TOKEN`.
+
+By default the command property uses the demo `wrangler-demo.toml`, you'll probably want to create your own `wrangler.toml` based on the `wrangler.toml.example` file in the root of the Worker's directory. See [getting started](./getting-started) for more information on how to configure Wrangler.
+
+Template for your new `deploy.yml` file:
+```yml
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+```

@@ -11,12 +11,21 @@ import Dashboard_CSS from './assets/styles.css';
 const router = Router();
 
 // Dashboard page
-router.get('/dashboard', async (request: WorkerRequest) => {
-	return new Response(Dashboard_HTML, {
+router.get('/dashboard', async (request: WorkerRequest, env: Env) => {
+	let response = new Response(Dashboard_HTML, {
 		headers: {
 			'content-type': 'text/html;charset=UTF-8',
 		},
 	});
+
+	const body = await response.text();
+	response = new Response(body.replace('REPLACE_MAX_TTL', env.MAX_TTL.toString()), {
+		headers: {
+			'content-type': 'text/html;charset=UTF-8',
+		},
+	});
+
+	return response;
 });
 
 // Dashboard styles
