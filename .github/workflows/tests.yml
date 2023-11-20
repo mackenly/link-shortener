@@ -2,12 +2,16 @@ name: Run Tests
 
 on:
   push:
-    paths:
-      - 'link-shortener/**'
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    name: Run Tests on Worker
 
     steps:
     - name: Checkout code
