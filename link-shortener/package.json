@@ -8,7 +8,7 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240419.0",
+    "@cloudflare/workers-types": "^4.20240423.0",
     "@types/qr-image": "^3.2.9",
     "itty-router": "^4.2.2",
     "typescript": "^5.4.5",
