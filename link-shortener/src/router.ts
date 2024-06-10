@@ -3,9 +3,9 @@ import { imageSync } from 'qr-image';
 import { IlinkResponse, IStatResponse, Metadata, Env, WorkerRequest } from './types';
 import { handleCreateLink } from './utils';
 
-// @ts-ignore
+// @ts-expect-error
 import Dashboard_HTML from './dashboard.html';
-// @ts-ignore
+// @ts-expect-error
 import Dashboard_CSS from './assets/styles.css';
 
 const router = Router();
@@ -26,19 +26,19 @@ router.get('/dashboard', async (request: WorkerRequest, env: Env) => {
 	});
 
 	return response;
-});
+})
 
 // Dashboard styles
-router.get('/dashboard/styles.css', async (request: WorkerRequest) => {
+.get('/dashboard/styles.css', async (request: WorkerRequest) => {
 	return new Response(Dashboard_CSS, {
 		headers: {
 			'content-type': 'text/css;charset=UTF-8',
 		},
 	});
-});
+})
 
 // GET a slug to redirect
-router.get('/:id', async (request: WorkerRequest, env: Env) => {
+.get('/:id', async (request: WorkerRequest, env: Env) => {
 	// get link
 	const response = await env.LINK_SHORTENER.getWithMetadata(request.params.id);
 
@@ -70,10 +70,10 @@ router.get('/:id', async (request: WorkerRequest, env: Env) => {
 
 	// return response
 	return Response.redirect(value, 307);
-});
+})
 
 // GET all links
-router.get('/api/links', async (request: WorkerRequest, env: Env) => {
+.get('/api/links', async (request: WorkerRequest, env: Env) => {
 	// get all links
 	const links = await env.LINK_SHORTENER.list();
 
@@ -97,10 +97,10 @@ router.get('/api/links', async (request: WorkerRequest, env: Env) => {
 			"content-type": "application/json;charset=UTF-8",
 		},
 	});
-});
+})
 
 // GET link stats
-router.get('/api/links/:id/stats', async (request: WorkerRequest, env: Env) => {
+.get('/api/links/:id/stats', async (request: WorkerRequest, env: Env) => {
 	// get link
 	const response = await env.LINK_SHORTENER.getWithMetadata(request.params.id);
 
@@ -126,10 +126,10 @@ router.get('/api/links/:id/stats', async (request: WorkerRequest, env: Env) => {
 	}
 
 	return new Response(JSON.stringify(statResponse), { status: 200 });
-});
+})
 
 // GET QR code
-router.get('/api/links/:id/qr', async (request: WorkerRequest) => {
+.get('/api/links/:id/qr', async (request: WorkerRequest) => {
 	const url = `${new URL(request.url).origin}/${request.params.id}`;
 	const qr = imageSync(url, { type: 'png' });
 	return new Response(qr, {
@@ -137,18 +137,18 @@ router.get('/api/links/:id/qr', async (request: WorkerRequest) => {
 			'content-type': 'image/png',
 		},
 	});
-});
+})
 
 // DELETE link
-router.delete('/api/links/:id', async (request: WorkerRequest, env: Env) => {
+.delete('/api/links/:id', async (request: WorkerRequest, env: Env) => {
 	env.LINK_SHORTENER.delete(request.params.id);
 	return new Response(JSON.stringify({
 		"message": "Link deleted.",
 	}), { status: 200 });
-});
+})
 
 // GET item
-router.get('/api/links/:id', async (request: WorkerRequest, env: Env) => {
+.get('/api/links/:id', async (request: WorkerRequest, env: Env) => {
 	// get link
 	//const response = await env.LINK_SHORTENER.getWithMetadata(request.params.id);
 	const response: { value: string; metadata: Metadata; } = await env.LINK_SHORTENER.getWithMetadata(request.params.id);
@@ -177,15 +177,15 @@ router.get('/api/links/:id', async (request: WorkerRequest, env: Env) => {
 		"owner": metadata.owner,
 	}
 	return new Response(JSON.stringify(linkResponse), { status: 200 });
-});
+})
 
 // Internal POST link
-router.post('/api/links', async (request: WorkerRequest, env: Env) => {
+.post('/api/links', async (request: WorkerRequest, env: Env) => {
 	return await handleCreateLink(request, env);
-});
+})
 
 // Publicly accessible API POST link
-router.post('/api/external/links', async (request: WorkerRequest, env: Env) => {
+.post('/api/external/links', async (request: WorkerRequest, env: Env) => {
 	// if authorization header is not set, return 401
 	if (!request.headers.get('authorization')) {
 		return new Response(JSON.stringify({
@@ -212,9 +212,9 @@ router.post('/api/external/links', async (request: WorkerRequest, env: Env) => {
 		});
 	}
 	return await handleCreateLink(request, env);
-});
+})
 
-router.get('/', async (request: WorkerRequest, env: Env) => {
+.get('/', async (request: WorkerRequest, env: Env) => {
 	// redirect url env
 	const redirectUrl = env.ROOT_REDIRECT;
 	if (!redirectUrl || redirectUrl === '' || redirectUrl === 'undefined' || redirectUrl === 'null') {
@@ -222,10 +222,10 @@ router.get('/', async (request: WorkerRequest, env: Env) => {
 	} else {
 		return Response.redirect(redirectUrl, 307);
 	}
-});
+})
 
 // 404 for everything else
-router.all('*', () => {
+.all('*', () => {
 	return new Response(JSON.stringify({
 		"error": "Not found.",
 	}), {
