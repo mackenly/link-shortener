@@ -11,9 +11,9 @@
     "@cloudflare/workers-types": "^4.20240620.0",
     "@types/qr-image": "^3.2.9",
     "itty-router": "^5.0.17",
-    "typescript": "^5.5.2",
+    "typescript": "^5.5.3",
     "vitest": "^1.6.0",
-    "wrangler": "^3.61.0"
+    "wrangler": "^3.63.1"
   },
   "dependencies": {
     "nanoid": "^5.0.7",
