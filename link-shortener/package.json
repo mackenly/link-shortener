@@ -13,7 +13,7 @@
     "itty-router": "^5.0.18",
     "typescript": "^5.5.4",
     "vitest": "^2.0.5",
-    "wrangler": "^3.72.2"
+    "wrangler": "^3.73.0"
   },
   "dependencies": {
     "nanoid": "^5.0.7",
