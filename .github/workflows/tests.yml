@@ -29,3 +29,28 @@ jobs:
     - name: Run tests
       run: npm test
       working-directory: ./link-shortener
+  
+  e2e:
+    runs-on: ubuntu-latest
+    name: Run E2E Tests for Documentation
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+
+    - name: Install dependencies
+      run: npm ci
+      working-directory: ./docs
+
+    - name: Install playwright dependencies
+      run: npx playwright install --with-deps
+      working-directory: ./docs
+
+    - name: Run E2E tests
+      run: npm run e2e
+      working-directory: ./docs
