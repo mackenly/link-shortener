@@ -44,7 +44,7 @@ jobs:
         node-version: '22'
 
     - name: Install dependencies
-      run: npm ci
+      run: pnpm install
       working-directory: ./docs
 
     - name: Install playwright dependencies
