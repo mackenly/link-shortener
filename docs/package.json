@@ -8,6 +8,10 @@
 		"source-map-support": "^0.5.21"
 	},
 	"scripts": {
-		"dev": "pnpm next"
+		"dev": "pnpm next",
+		"e2e": "playwright test -c e2e/playwright.config.ts"
+	},
+	"devDependencies": {
+		"@playwright/test": "^1.48.2"
 	}
 }

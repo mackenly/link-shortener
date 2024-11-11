@@ -130,3 +130,7 @@ dist
 # wrangler / workers
 wrangler.toml
 .wrangler/
+
+# playwright
+/playwright-report
+/test-results
