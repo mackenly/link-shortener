@@ -12,8 +12,8 @@
     "@types/qr-image": "^3.2.9",
     "itty-router": "^5.0.18",
     "typescript": "^5.7.3",
-    "vitest": "^2.1.8",
-    "wrangler": "^3.101.0"
+    "vitest": "^3.0.2",
+    "wrangler": "^3.103.2"
   },
   "dependencies": {
     "nanoid": "^5.0.9",
