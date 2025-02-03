@@ -8,12 +8,12 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250124.3",
+    "@cloudflare/workers-types": "^4.20250129.0",
     "@types/qr-image": "^3.2.9",
     "itty-router": "^5.0.18",
     "typescript": "^5.7.3",
     "vitest": "^3.0.4",
-    "wrangler": "^3.105.1"
+    "wrangler": "^3.107.2"
   },
   "dependencies": {
     "nanoid": "^5.0.9",
