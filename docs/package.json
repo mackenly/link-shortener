@@ -12,6 +12,6 @@
 		"e2e": "playwright test -c e2e/playwright.config.ts"
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.54.2"
+		"@playwright/test": "^1.55.0"
 	}
 }
