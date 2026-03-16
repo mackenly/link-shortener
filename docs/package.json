@@ -1,10 +1,10 @@
 {
 	"dependencies": {
-		"next": "15.5.10",
-		"nextra": "^3.3.1",
-		"nextra-theme-docs": "^3.3.1",
-		"react": "^19.0.0",
-		"react-dom": "^19.0.0",
+		"next": "16.1.6",
+		"nextra": "^4.6.1",
+		"nextra-theme-docs": "^4.6.1",
+		"react": "^19.2.4",
+		"react-dom": "^19.2.4",
 		"source-map-support": "^0.5.21"
 	},
 	"scripts": {
