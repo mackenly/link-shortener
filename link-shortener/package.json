@@ -16,7 +16,7 @@
     "wrangler": "^4.85.0"
   },
   "dependencies": {
-    "nanoid": "^5.1.9",
+    "nanoid": "^5.1.11",
     "qr-image": "^3.2.0"
   }
 }
