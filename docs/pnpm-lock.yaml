@@ -1792,9 +1792,9 @@ packages:
     resolution: {integrity: sha512-f9s+fUkX04BxQf+7mMWAp5zk61pciie+fFLC9hX9UVvCeJQfNHRHXpeo5MPcR0EUf57PYLdt+ZO4f3Ipk2oZUw==}
     engines: {node: '>=0.1'}
 
-  yaml@2.6.1:
-    resolution: {integrity: sha512-7r0XPzioN/Q9kXBro/XPnA6kznR73DHq+GXh5ON7ZozRO6aMjbmiBuKste2wslTFkC5d1dw0GooOCepZXJ2SAg==}
-    engines: {node: '>= 14'}
+  yaml@2.9.0:
+    resolution: {integrity: sha512-2AvhNX3mb8zd6Zy7INTtSpl1F15HW6Wnqj0srWlkKLcpYl/gMIMJiyuGq2KeI2YFxUPjdlB+3Lc10seMLtL4cA==}
+    engines: {node: '>= 14.6'}
     hasBin: true
 
   yocto-queue@1.1.1:
@@ -3614,7 +3614,7 @@ snapshots:
       title: 4.0.1
       unist-util-remove: 4.0.0
       unist-util-visit: 5.0.0
-      yaml: 2.6.1
+      yaml: 2.9.0
       zod: 3.24.1
       zod-validation-error: 3.4.0(zod@3.24.1)
     transitivePeerDependencies:
@@ -4157,7 +4157,7 @@ snapshots:
 
   xmldom-sre@0.1.31: {}
 
-  yaml@2.6.1: {}
+  yaml@2.9.0: {}
 
   yocto-queue@1.1.1: {}
 
