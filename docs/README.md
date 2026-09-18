@@ -14,17 +14,12 @@ pnpm deploy
 
 Preview the production export locally with `pnpm preview` (after `pnpm build`, or let Wrangler run the build).
 
-### One-time dashboard cutover
+CI deploys this Worker from GitHub Actions (`.github/workflows/deploy-docs.yml`) with Node 22, `pnpm build`, and `wrangler deploy`. That is the supported path.
 
-Create or connect a **Workers** project (not Pages) pointing at this repo. Settings that cannot live only in git:
+The old **Pages** Git integration still runs `npx @cloudflare/next-on-pages@1` on Node 18. That adapter is deprecated and the v2 Pages image ignores this lockfile. Turn off Pages automatic deployments for this project (or delete the Pages project) so those builds stop failing.
 
-- **Root directory:** `docs`
-- **Build command:** `pnpm build` (Workers Builds does not run Wrangler's `[build]` block)
-- **Deploy command:** `npx wrangler deploy` (default)
-- Attach the custom domain (`linkshortener.dev`) on the Worker after the first deploy, then remove it from the old Pages project
+After the first Worker deploy, attach `linkshortener.dev` on the **link-shortener-docs** Worker, then remove the domain from Pages.
 
-Node is pinned via `.nvmrc` (22). Workers Builds reads that file; override with `NODE_VERSION` only if needed.
-
-Do not set the build or deploy command to `npx @cloudflare/next-on-pages@1`.
+Node is pinned via `.nvmrc` (22). Do not set the build command to `npx @cloudflare/next-on-pages@1`.
 
 TypeScript stays on `~5.6.2` because Nextra 3's highlighter (twoslash) is not compatible with TypeScript 7. That pin is independent of the Cloudflare deploy path.
