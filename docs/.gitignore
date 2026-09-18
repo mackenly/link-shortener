@@ -87,6 +87,9 @@ web_modules/
 .next
 out
 
+# Wrangler
+.wrangler
+
 # Nuxt.js build / generate output
 .nuxt
 dist

@@ -1,4 +1,9 @@
 {
+	"name": "link-shortener-docs",
+	"private": true,
+	"engines": {
+		"node": ">=22"
+	},
 	"dependencies": {
 		"next": "15.5.24",
 		"nextra": "^3.3.1",
@@ -9,9 +14,17 @@
 	},
 	"scripts": {
 		"dev": "pnpm next",
+		"build": "next build",
+		"preview": "wrangler dev",
+		"deploy": "wrangler deploy",
 		"e2e": "playwright test -c e2e/playwright.config.ts"
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.63.0"
+		"@playwright/test": "^1.63.0",
+		"typescript": "~5.6.2",
+		"wrangler": "^4.135.0"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": ["esbuild", "workerd"]
 	}
 }

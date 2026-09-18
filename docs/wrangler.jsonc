@@ -1,0 +1,13 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "link-shortener-docs",
+	"compatibility_date": "2026-09-18",
+	"assets": {
+		"directory": "./out",
+		"not_found_handling": "404-page",
+		"html_handling": "auto-trailing-slash"
+	},
+	"build": {
+		"command": "pnpm build"
+	}
+}

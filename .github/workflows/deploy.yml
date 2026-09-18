@@ -13,6 +13,9 @@ jobs:
     name: Deploy Demo Worker
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
         with:
