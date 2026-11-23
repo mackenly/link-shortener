@@ -11,12 +11,12 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20261113.1",
+    "@cloudflare/workers-types": "^5.20261120.1",
     "@types/qr-image": "^3.2.11",
     "itty-router": "^5.0.24",
     "typescript": "^7.0.2",
-    "vitest": "^5.1.0",
-    "wrangler": "^4.161.0"
+    "vitest": "^5.1.1",
+    "wrangler": "^4.165.0"
   },
   "dependencies": {
     "nanoid": "^6.0.2",
